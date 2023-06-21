@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "f8f88868-7a11-488f-9cc2-87a8c9b08740",
+		"name": "JSONPlaceHolder",
+		"description": "Collection for test JSONPlaceHolder API - /users & /posts endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "14437377"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Retrieve an user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"//  Validate phone field in the response",
+									"pm.test('\"phone\" as field in the response', function() {",
+									"    pm.expect(jsonData).to.have.property('phone');",
+									"});",
+									"",
+									"//  Validate website field in the response",
+									"pm.test('\"website\" as field in the response', function() {",
+									"    pm.expect(jsonData).to.have.property('website');",
+									"});",
+									"",
+									"//  Definition of username variable",
+									"pm.environment.set(\"userName\", jsonData.username);",
+									"//  Print body response",
+									"console.log(jsonData)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/users/{{user-number}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update an user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"//  Verify username value was modified successfully",
+									"pm.test('\"username\" field has a new value', function () {",
+									"    pm.expect(jsonData.username).to.eql(pm.collectionVariables.get(\"user-username\"));",
+									"    pm.expect(jsonData.username).not.eql(pm.environment.get(\"userName\"));",
+									"});",
+									"",
+									"//  Print body response",
+									"console.log(jsonData)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 8,\n    \"name\": \"Nicholas Runolfsdottir V\",\n    \"username\": \"{{user-username}}\",\n    \"email\": \"Sherwood@rosamond.me\",\n    \"address\": {\n        \"street\": \"Ellsworth Summit\",\n        \"suite\": \"Suite 729\",\n        \"city\": \"Aliyaview\",\n        \"zipcode\": \"45169\",\n        \"geo\": {\n            \"lat\": \"-14.3990\",\n            \"lng\": \"-120.7677\"\n        }\n    },\n    \"phone\": \"586.493.6943 x140\",\n    \"website\": \"jacynthe.com\",\n    \"company\": {\n        \"name\": \"Abernathy Group\",\n        \"catchPhrase\": \"Implemented secondary concept\",\n        \"bs\": \"e-enable extensible e-tailers\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/users/{{user-number}}"
+					},
+					"response": []
+				}
+			],
+			"description": "Run the folder for execute the automated tests implemented for both GET & PUT methods in /users endpoint.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"//  Check Status Code ",
+							"pm.test(\"Server responds 200 HTML error code\", function () {",
+							"    pm.response.to.have.status(200)",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"//  User Schema definition (TinyValidation)",
+							"var userSchema = {",
+							"  type: \"object\",",
+							"  required: [\"phone\", \"website\"],",
+							"  properties: {",
+							"    id: { type: \"integer\" },",
+							"    name: { type: \"string\" },",
+							"    username: { type: \"string\" },",
+							"    email: { type: \"string\" },",
+							"    address: { $ref: \"addressSchema\" },",
+							"    phone: { type: \"string\" },",
+							"    website: { type: \"string\" },",
+							"    company: { $ref: \"companySchema\" }",
+							"  }",
+							"};",
+							"",
+							"var addressSchema = {",
+							"  type: \"object\",",
+							"  required: [],",
+							"  properties: {",
+							"    street: { type: \"string\" },",
+							"    suite: { type: \"string\" },",
+							"    city: { type: \"string\" },",
+							"    zipcode: { type: \"string\" },",
+							"    geo: { $ref: \"geoAddressSchema\" }",
+							"  }",
+							"};",
+							"",
+							"var geoAddressSchema = {",
+							"  type: \"object\",",
+							"  required: [],",
+							"  properties: {",
+							"    lat: { type: \"string\" },",
+							"    lng: { type: \"string\" }",
+							"  }",
+							"};",
+							"",
+							"var companySchema = {",
+							"  type: \"object\",",
+							"  required: [],",
+							"  properties: {",
+							"    name: { type: \"string\" },",
+							"    catchPhrase: { type: \"string\" },",
+							"    bs: { type: \"string\" }",
+							"  }",
+							"};",
+							"",
+							"tv4.addSchema(\"addressSchema\", addressSchema);",
+							"tv4.addSchema(\"geoAddressSchema\", geoAddressSchema);",
+							"tv4.addSchema(\"companySchema\", companySchema);",
+							"",
+							"//  Validate JSON structure for user/8",
+							"pm.test(\"Response has the expected user schema\", function() {",
+							"  pm.expect(tv4.validate(jsonData, userSchema)).to.be.true;",
+							"});",
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Create a new post",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');",
+									"",
+									"pm.environment.set('currentDate', moment().format((\"MM/DD/YY\")));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//  Check Status Code ",
+									"pm.test(\"Server responds 201 HTML error code\", function () {",
+									"    pm.response.to.have.status(201)",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"//  Definition of body-field variable",
+									"pm.environment.set(\"body\", jsonData.body);",
+									"//  Print body response",
+									"console.log(jsonData)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user-number}},\n    \"title\": \"delectus ullam et corporis nulla voluptas sequi\",\n    \"body\": \"non et quaerat ex quae ad maiores\\nmaiores recusandae totam aut blanditiis mollitia quas illo\\nut voluptatibus voluptatem\\nsimilique nostrum eum\",\n    \"date\": \"{{currentDate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/posts/"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//  Check Status Code ",
+									"pm.test(\"Server responds 200 HTML error code\", function () {",
+									"    pm.response.to.have.status(200)",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"//  Verify comment in body-field was modified successfully",
+									"pm.test('\"body\" field has a new comment', function () {",
+									"    pm.expect(jsonData.body).not.eql(pm.environment.get(\"body\"));",
+									"});",
+									"//  Print body response",
+									"console.log(jsonData)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user-number}},\n    \"title\": \"delectus ullam et corporis nulla voluptas sequi\",\n    \"body\": \"This is a new comment.\",\n    \"date\": \"{{currentDate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/posts/10"
+					},
+					"response": []
+				}
+			],
+			"description": "Run the folder for execute the automated tests implemented for both POST & PUT methods in /posts endpoint.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"//  Post Schema definition (TinyValidation)",
+							"var postSchema = {",
+							"  type: \"object\",",
+							"  required: [ \"userId\", \"id\", \"title\", \"body\", \"date\" ],",
+							"  properties: {",
+							"    userId: { type: \"integer\" },",
+							"    id: { type: \"integer\" },",
+							"    title: { type: \"string\" },",
+							"    body: { type: \"string\" },",
+							"    date: { type: \"string\" }",
+							"  }",
+							"};",
+							"",
+							"//  Validate JSON structure for posts/10",
+							"pm.test(\"Response has the expected post schema\", function() {",
+							"  pm.expect(tv4.validate(jsonData, postSchema)).to.be.true;",
+							"});"
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "user-number",
+			"value": "8",
+			"type": "string"
+		},
+		{
+			"key": "post-number",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "user-username",
+			"value": "zoe-todaydate",
+			"type": "string"
+		}
+	]
+}
