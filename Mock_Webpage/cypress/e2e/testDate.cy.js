@@ -22,7 +22,8 @@ describe('Modify meeting type and date', () => {
         // Define and input of the new value
         const ranValue =  Math.floor((Math.random()*10000));
         const newValue = (3087480000 + ranValue).toString();
-        const typingValue = '(308) 748-' + ranValue.toString();
+        const typValue = '(308) 748-' + String(ranValue).padStart(4,'0');
+        
         cy.get('@input').type(newValue);
     
         // Check that the new walue was set successfully
