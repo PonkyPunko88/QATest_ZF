@@ -1,0 +1,10 @@
+# ignore ALL .log files
+*.log
+
+# ignore ALL files in ANY directory named temp
+temp/
+
+Mock_Webpage/node_modules/
+node_modules/
+package-lock.json
+Mock_Webpage/cypress/fixtures
