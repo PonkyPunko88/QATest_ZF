@@ -1,6 +1,8 @@
-*.log
-Mock_Webpage/node_modules/
 node_modules/
 package-lock.json
-Mock_Webpage/cypress/fixtures
+
 .prettierrc
+.directory
+*.log
+
+Mock_Webpage/cypress/fixtures
