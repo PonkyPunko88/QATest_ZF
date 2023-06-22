@@ -27,7 +27,7 @@ describe('Modify meeting type and date', () => {
         cy.get('@input').type(newValue);
     
         // Check that the new walue was set successfully
-        cy.get('@input').should('have.value', typingValue);
+        cy.get('@input').should('have.value', typValue);
     
         // Check old value is not in the popup
         cy.get('@input').should('not.have.value', presetValue);
